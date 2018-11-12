@@ -1,0 +1,28 @@
+version: '3'
+services:
+  # This is the WAMP router.
+  # It is a central part of our applcation, providing the communication between all parts.
+  broker:
+    image: embeddedenterprises/autobahnkreuz:v0.9.8
+    restart: unless-stopped
+    command: -r gittalk --enable-wss=false --ws-port 4000 --enable-authorization=false --ticket-check-func=rocks.git.public.authenticate --ticket-get-role-func=rocks.git.public.get-roles --exclude-auth-role=system,trusted
+    ports:
+    - "4000:4000"
+    networks:
+      gittalk: {}
+
+  docker-auth-gen:
+    image: ovgucsworkshops/cmanager:v0.1.0
+    restart: unless-stopped
+    env_file:
+      - "./service.env"
+    environment:
+      - "USER_IMAGE=ovgucsworkshops/git-userland:v0.1.0"
+      - "DOCKER_API_VERSION=1.38"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      gittalk: {}
+networks:
+  gittalk:
+    external: true
