@@ -23,6 +23,13 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
     networks:
       gittalk: {}
+  client:
+    image: jwuensche/web-terminal
+    restart: unless-stopped
+    ports:
+    - "8002:80"
+    networks:
+      gittalk: {}
 networks:
   gittalk:
     external: true
