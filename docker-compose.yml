@@ -1,13 +1,13 @@
-version: '3'
+version: '2'
 services:
   # This is the WAMP router.
   # It is a central part of our applcation, providing the communication between all parts.
   broker:
     image: embeddedenterprises/autobahnkreuz:v0.9.8
     restart: unless-stopped
-    command: -r gittalk --enable-wss=false --ws-port 4000 --enable-authorization=false --ticket-check-func=rocks.git.public.authenticate --ticket-get-role-func=rocks.git.public.get-roles --exclude-auth-role=system,trusted
+    command: -r gittalk --enable-wss=false --ws-port 6032 --enable-authorization=false --ticket-check-func=rocks.git.public.authenticate --ticket-get-role-func=rocks.git.public.get-roles --exclude-auth-role=system,trusted
     ports:
-    - "4000:4000"
+    - "6032:6032"
     networks:
       gittalk: {}
 
@@ -21,13 +21,17 @@ services:
       - "DOCKER_API_VERSION=1.38"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
+    links:
+      - broker
     networks:
       gittalk: {}
   client:
     image: jwuensche/web-terminal
     restart: unless-stopped
     ports:
-    - "8002:80"
+      - "6033:80"
+    environment:
+      - "BROKER_URL=wss://workshop-backend.pattig.rocks"
     networks:
       gittalk: {}
 networks:
