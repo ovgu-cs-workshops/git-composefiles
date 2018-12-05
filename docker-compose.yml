@@ -37,7 +37,16 @@ services:
     environment:
       - "BROKER_URL=wss://workshop-backend.pattig.rocks"
     networks:
-      gittalk-int: {}
+      gittalk: {}
+  presentation:
+    image: jwuensche/git-talk
+    restart: unless-stopped
+    ports:
+      - "6034:80"
+    environment:
+      - "BROKER_URL=wss://workshop-backend.pattig.rocks"
+    networks:
+      gittalk: {}
 networks:
   gittalk:
     external: true
