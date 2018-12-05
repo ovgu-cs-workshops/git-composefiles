@@ -9,22 +9,26 @@ services:
     ports:
     - "6032:6032"
     networks:
+      gittalk-int: {}
       gittalk: {}
 
   docker-auth-gen:
-    image: ovgucsworkshops/cmanager:v0.1.0
+    image: ovgucsworkshops/cmanager:local
     restart: unless-stopped
     env_file:
       - "./service.env"
     environment:
-      - "USER_IMAGE=ovgucsworkshops/git-userland:v0.1.0"
+      - "USER_IMAGE=ovgucsworkshops/git-userland:latest"
       - "DOCKER_API_VERSION=1.38"
+      - "USER_INTERNAL_NETWORK=gittalk-int"
+      - "USER_ALLOW_NETWORK=true"
+      - "USER_NETWORK=gittalk"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     links:
       - broker
     networks:
-      gittalk: {}
+      gittalk-int: {}
   client:
     image: jwuensche/web-terminal
     restart: unless-stopped
@@ -33,7 +37,9 @@ services:
     environment:
       - "BROKER_URL=wss://workshop-backend.pattig.rocks"
     networks:
-      gittalk: {}
+      gittalk-int: {}
 networks:
   gittalk:
+    external: true
+  gittalk-int:
     external: true
