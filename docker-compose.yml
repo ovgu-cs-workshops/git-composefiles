@@ -13,7 +13,7 @@ services:
       gittalk: {}
 
   docker-auth-gen:
-    image: ovgucsworkshops/cmanager:local
+    image: ovgucsworkshops/cmanager:latest
     restart: unless-stopped
     env_file:
       - "./service.env"
