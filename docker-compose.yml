@@ -8,9 +8,14 @@ services:
     command: -r gittalk --enable-wss=false --ws-port 6032 --enable-authorization=false --ticket-check-func=rocks.git.public.authenticate --ticket-get-role-func=rocks.git.public.get-roles --exclude-auth-role=system,trusted
     ports:
     - "6032:6032"
+    environment:
+      - "VIRTUAL_HOST=api.workshop.pattig.rocks"
+      - "LETSENCRYPT_EMAIL=martin.koppehel@st.ovgu.de"
+      - "LETSENCRYPT_HOST=api.workshop.pattig.rocks,presentation.workshop.pattig.rocks,workshop.pattig.rocks"
     networks:
       gittalk-int: {}
       gittalk: {}
+      rproxy: {}
 
   docker-auth-gen:
     image: ovgucsworkshops/cmanager:latest
@@ -35,20 +40,30 @@ services:
     ports:
       - "6033:80"
     environment:
-      - "BROKER_URL=wss://workshop-backend.pattig.rocks"
+      - "VIRTUAL_HOST=workshop.pattig.rocks"
+      - "BROKER_URL=wss://api.workshop.pattig.rocks"
+      - "LETSENCRYPT_EMAIL=martin.koppehel@st.ovgu.de"
+      - "LETSENCRYPT_HOST=api.workshop.pattig.rocks,presentation.workshop.pattig.rocks,workshop.pattig.rocks"
     networks:
       gittalk: {}
+      rproxy: {}
   presentation:
     image: jwuensche/git-talk
     restart: unless-stopped
     ports:
       - "6034:80"
     environment:
-      - "BROKER_URL=wss://workshop-backend.pattig.rocks"
+      - "VIRTUAL_HOST=presentation.workshop.pattig.rocks"
+      - "BROKER_URL=wss://api.workshop.pattig.rocks"
+      - "LETSENCRYPT_EMAIL=martin.koppehel@st.ovgu.de"
+      - "LETSENCRYPT_HOST=api.workshop.pattig.rocks,presentation.workshop.pattig.rocks,workshop.pattig.rocks"
     networks:
       gittalk: {}
+      rproxy: {}
 networks:
   gittalk:
     external: true
   gittalk-int:
+    external: true
+  rproxy:
     external: true
