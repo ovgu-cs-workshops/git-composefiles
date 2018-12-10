@@ -23,7 +23,7 @@ services:
     env_file:
       - "./service.env"
     environment:
-      - "USER_IMAGE=ovgucsworkshops/git-userland:latest"
+      - "USER_IMAGE=ovgucsworkshops/git-userland:v0.1.13"
       - "DOCKER_API_VERSION=1.38"
       - "USER_INTERNAL_NETWORK=gittalk-int"
       - "USER_ALLOW_NETWORK=true"
@@ -35,7 +35,7 @@ services:
     networks:
       gittalk-int: {}
   client:
-    image: jwuensche/web-terminal
+    image: ovgucsworkshops/web-terminal
     restart: unless-stopped
     ports:
       - "6033:80"
