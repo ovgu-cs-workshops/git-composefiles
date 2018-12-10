@@ -35,7 +35,7 @@ services:
     networks:
       gittalk-int: {}
   client:
-    image: ovgucsworkshops/web-terminal
+    image: ovgucsworkshops/web-terminal:latest
     restart: unless-stopped
     ports:
       - "6033:80"
@@ -48,7 +48,7 @@ services:
       gittalk: {}
       rproxy: {}
   presentation:
-    image: jwuensche/git-talk
+    image: ovgucsworkshops/git-workshop:latest
     restart: unless-stopped
     ports:
       - "6034:80"
